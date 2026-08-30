@@ -521,67 +521,7 @@ synthetic/
 
 ---
 
-## 7. PROTOCOL ĐÁNH GIÁ DỰ BÁO (RQ3)
-
-### 7.1. Dataset
-
-- SEC financial time series
-- Synthetic normal time series
-- Monash reference datasets
-
-### 7.2. Forecasting unit
-
-Phải xác định rõ dự báo theo:
-- company/entity
-- financial metric
-- hoặc aggregated series
-
-### 7.3. Temporal split
-
-Sử dụng chronological split / rolling-origin evaluation. Không random shuffle.
-
-### 7.4. Metrics
-
-Đề xuất:
-- MAE
-- RMSE
-- MASE hoặc sMAPE
-
-### 7.5. Baselines
-
-Ít nhất xem xét:
-- Naive
-- Seasonal Naive nếu phù hợp
-- ARIMA/ETS
-- Model đề xuất
-
-### 7.6. Foundation model contamination
-
-Nếu sử dụng TimesFM/Chronos hoặc các foundation model khác, phải ghi rõ vấn đề potential data contamination / training-data leakage và không coi kết quả là hoàn toàn công bằng nếu benchmark có khả năng xuất hiện trong pretraining corpus.
-
----
-
-## 8. DATA LEAKAGE / CONTAMINATION
-
-### 8.1. NL2SQL
-
-Không để cùng một question/template/schema xuất hiện giữa train và evaluation nếu pipeline tự xây dựng dữ liệu bổ sung.
-
-### 8.2. Forecasting
-
-Không random shuffle temporal data.
-
-### 8.3. Foundation models
-
-TimesFM/Chronos và các foundation model khác có khả năng đã được pre-trained trên dữ liệu công khai. Nếu dataset benchmark có khả năng nằm trong training corpus, đánh dấu kết quả là potentially contaminated.
-
-### 8.4. Synthetic
-
-Không dùng anomaly-injected test data để train anomaly detector nếu mục tiêu là đánh giá khả năng phát hiện.
-
----
-
-## 9. HẠN CHẾ (LIMITATIONS)
+## 6. HẠN CHẾ (LIMITATIONS)
 
 1. **SEC EDGAR:** Chỉ có báo cáo tổng hợp, không có transaction-level ledger với chiều sản phẩm/khách hàng/khu vực chi tiết. 26 quý là hạn chế đáng kể cho deep learning.
 2. **Online Retail II:** Thời gian 2009–2011 hơi cũ; cần kiểm tra lại tính relevance.
@@ -593,7 +533,7 @@ Không dùng anomaly-injected test data để train anomaly detector nếu mục
 
 ---
 
-## 10. LƯU Ý KHI SỬ DỤNG
+## 7. LƯU Ý KHI SỬ DỤNG
 
 1. **BookSQL:** Câu hỏi bằng tiếng Anh. Nếu muốn khẳng định hệ thống chạy tiếng Việt, phải dịch một tập con và cho người bản ngữ rà lại.
 2. **SEC EDGAR:** Chỉ có báo cáo tổng hợp, không có sổ cái chi tiết. Không có chiều "khu vực", "sản phẩm", "khách hàng" → không drill-down sâu được.
