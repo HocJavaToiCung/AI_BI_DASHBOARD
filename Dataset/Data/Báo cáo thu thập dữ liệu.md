@@ -181,6 +181,82 @@ BookSQL/
 
 Tổng cộng: **26 quý** (2020–2026).
 
+**Ví dụ cấu trúc giải nén:** Sau khi giải nén `2022q1.7z` (~50,2 MB), thu được thư mục `2022q1/` với các file:
+
+| File | Kích thước nén | Kích thước giải nén | Số dòng | Công dụng |
+|------|---------------|---------------------|---------|-----------|
+| `num.txt` | ~50 MB | ~413 MB | 3.264.633 | **Số liệu tài chính** (financial data) |
+| `pre.txt` | ~22 MB | ~98 MB | 832.868 | **Presentation/link** (liên kết giữa báo cáo và số liệu) |
+| `tag.txt` | ~22 MB | ~21,5 MB | 105.254 | **Tag dictionary** (định nghĩa các tag XBRL) |
+| `sub.txt` | ~2,1 MB | ~2,1 MB | 7.238 | **Submission metadata** (thông tin công ty) |
+| `readme.htm` | - | ~151 KB | - | **Documentation** (hướng dẫn định dạng) |
+
+**Chi tiết từng file:**
+
+##### `sub.txt` — Submission Metadata
+**Công dụng:** Thông tin về công ty và báo cáo tài chính đã nộp.
+
+| Cột | Ví dụ | Mô tả |
+|-----|-------|-------|
+| `adsh` | `0000002178-22-000033` | Accession number (ID duy nhất của filing) |
+| `cik` | `2178` | CIK của công ty |
+| `name` | `ADAMS RESOURCES & ENERGY, INC.` | Tên công ty |
+| `sic` | `5172` | Mã SIC (ngành) |
+| `countryba` | `US` | Quốc gia trụ sở |
+| `stprba` | `TX` | Bang |
+| `cityba` | `HOUSTON` | Thành phố |
+| `fy` | `2021` | Năm tài chính |
+| `fp` | `FY` | Fiscal period |
+| `filed` | `20220309` | Ngày nộp |
+| `form` | `10-K` | Loại báo cáo |
+| `period` | `20211231` | Ngày kết thúc kỳ |
+
+##### `num.txt` — Financial Data (quan trọng nhất)
+**Công dụng:** Tất cả số liệu tài chính numeric, đây là file lớn nhất và quan trọng nhất cho warehouse.
+
+| Cột | Ví dụ | Mô tả |
+|-----|-------|-------|
+| `adsh` | `0001126975-22-000070` | Accession number |
+| `tag` | `Revenues` | Tên chỉ số tài chính (XBRL tag) |
+| `version` | `us-gaap/2021` | Taxonomy version |
+| `ddate` | `20211231` | Ngày số liệu (thường là period end date) |
+| `qtrs` | `4` | Số quý dữ liệu (0 = điểm, 4 = cả năm) |
+| `uom` | `USD` | Đơn vị |
+| `segments` | `BusinessSegments=GlobalServices` | Thông tin segment |
+| `coreg` | | Entity nếu consolidated |
+| `value` | `248000000.0000` | **Giá trị số** |
+| `footnote` | | Chú thích |
+
+##### `pre.txt` — Presentation
+**Công dụng:** Liên kết giữa financial statements (BS/IS/CF) và các số liệu trong `num.txt`.
+
+| Cột | Ví dụ | Mô tả |
+|-----|-------|-------|
+| `adsh` | | Accession number |
+| `report` | `3` | Report number |
+| `line` | `5` | Line number trong statement |
+| `stmt` | `BS` | Statement type: BS/IS/CF/SE/CI |
+| `inpth` | `0` | Depth |
+| `rfile` | `H` | Report file type |
+| `tag` | `AccountsReceivableNetCurrent` | Tag |
+| `plabel` | `Accounts receivable, net...` | Label |
+| `negating` | `0` | Có phải số âm không |
+
+##### `tag.txt` — Tag Dictionary
+**Công dụng:** Định nghĩa các tag XBRL chuẩn.
+
+| Cột | Ví dụ | Mô tả |
+|-----|-------|-------|
+| `tag` | `NetIncomeLoss` | Tên tag |
+| `version` | `us-gaap/2020` | Taxonomy version |
+| `custom` | `0` | 0 = standard, 1 = custom |
+| `abstract` | `0` | Có phải node trừu tượng không |
+| `datatype` | `monetary` | Kiểu dữ liệu |
+| `iord` | `D` | D = debit, C = credit |
+| `crdr` | `C` | C = credit |
+| `tlabel` | `Net Income (Loss)...` | Label chuẩn |
+| `doc` | | Mô tả chi tiết |
+
 **Lưu ý về phạm vi:** Nguồn SEC EDGAR có dữ liệu từ Q1/2009, nhưng phạm vi sử dụng trong đề tài này chỉ tải và xử lý **2020 Q1 đến 2026 Q2**.
 
 **Lưu ý về chất lượng:** Dữ liệu được lấy từ hồ sơ XBRL "as filed" với SEC và được cung cấp dưới dạng flat files. Dữ liệu có thể chứa sai sót phát sinh từ thông tin do registrant cung cấp hoặc quá trình trích xuất/tổng hợp; với các số liệu tài chính quan trọng cần đối chiếu với filing gốc.
@@ -525,39 +601,42 @@ synthetic/
 
 ### 7.1. Dataset
 
-- SEC financial time series
+- SEC financial time series (quarterly, 2020–2026)
 - Synthetic normal time series
-- Monash reference datasets
+- Monash reference datasets (Hospital, M4 Quarterly, Tourism Quarterly)
 
 ### 7.2. Forecasting unit
 
-Phải xác định rõ dự báo theo:
-- company/entity
-- financial metric
-- hoặc aggregated series
+Xác định rõ mức độ dự báo:
+- **Entity-level**: theo công ty/entity
+- **Metric-level**: theo chỉ số tài chính
+- **Aggregated**: theo ngành/khu vực
 
 ### 7.3. Temporal split
 
-Sử dụng chronological split / rolling-origin evaluation. Không random shuffle.
+- **Chronological split**: train → validation → test theo thứ tự thời gian
+- **Rolling-origin evaluation**: mở rộng cửa sổ train theo thời gian
+- **Không random shuffle** dữ liệu thời gian
 
 ### 7.4. Metrics
 
-Đề xuất:
-- MAE
-- RMSE
-- MASE hoặc sMAPE
+- **MAE** — độ lỗi trung bình
+- **RMSE** — phạt mạnh outlier
+- **MASE** hoặc **sMAPE** — so sánh cross-series
 
 ### 7.5. Baselines
 
-Ít nhất xem xét:
-- Naive
-- Seasonal Naive nếu phù hợp
+Ít nhất:
+- Naive / Seasonal Naive
 - ARIMA/ETS
 - Model đề xuất
 
 ### 7.6. Foundation model contamination
 
-Nếu sử dụng TimesFM/Chronos hoặc các foundation model khác, phải ghi rõ vấn đề potential data contamination / training-data leakage và không coi kết quả là hoàn toàn công bằng nếu benchmark có khả năng xuất hiện trong pretraining corpus.
+Nếu dùng TimesFM/Chronos:
+- Kiểm tra xem benchmark có nằm trong pretraining corpus không
+- Đánh dấu kết quả là **potentially contaminated** nếu không chắc chắn
+- Ưu tiên đánh giá trên dữ liệu SEC sau ngày cutoff của mô hình
 
 ---
 
@@ -565,19 +644,25 @@ Nếu sử dụng TimesFM/Chronos hoặc các foundation model khác, phải ghi
 
 ### 8.1. NL2SQL
 
-Không để cùng một question/template/schema xuất hiện giữa train và evaluation nếu pipeline tự xây dựng dữ liệu bổ sung.
+- Không để cùng question/template/schema xuất hiện ở cả train và evaluation
+- Kiểm tra schema leakage giữa BookSQL train/val/test
 
 ### 8.2. Forecasting
 
-Không random shuffle temporal data.
+- **Không random shuffle** dữ liệu thời gian
+- Temporal split bắt buộc: train trước, test sau
+- Không dùng thông tin tương lai để dự báo quá khứ
 
 ### 8.3. Foundation models
 
-TimesFM/Chronos và các foundation model khác có khả năng đã được pre-trained trên dữ liệu công khai. Nếu dataset benchmark có khả năng nằm trong training corpus, đánh dấu kết quả là potentially contaminated.
+- TimesFM/Chronos có thể đã được pre-trained trên benchmark công khai
+- Kiểm tra training corpus trước khi đánh giá
+- Đánh dấu kết quả là **potentially contaminated** nếu không xác minh được
 
 ### 8.4. Synthetic
 
-Không dùng anomaly-injected test data để train anomaly detector nếu mục tiêu là đánh giá khả năng phát hiện.
+- Không dùng anomaly-injected test data để train anomaly detector
+- Tách biệt hoàn toàn train (clean) và test (anomaly-injected)
 
 ---
 
