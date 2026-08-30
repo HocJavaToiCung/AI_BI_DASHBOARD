@@ -23,7 +23,7 @@
 | **Tên dự án** | AI Business Intelligence Dashboard |
 |**Mục tiêu** | Cho phép người dùng hỏi dữ liệu tài chính bằng tiếng Việt, nhận số liệu chính xác và có thể truy vết nguồn gốc |
 | **Nguyên tắc cốt lõi** | AI hiểu câu hỏi; máy tính tính số liệu; LLM không tự quyết định giá trị cuối cùng |
-| **Người thực hiện** | uyennhi |
+| **Người thực hiện** | phamngocuyenhi| HocJavaToiCung |
 | **Cập nhật** | 30/08/2026 |
 
 ---
