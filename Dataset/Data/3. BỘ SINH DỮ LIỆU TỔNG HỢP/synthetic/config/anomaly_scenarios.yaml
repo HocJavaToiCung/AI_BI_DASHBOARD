@@ -1,0 +1,53 @@
+scenarios:
+  spike_dip:
+    enabled: true
+    magnitudes: [1.5, 2.0, 2.5, 3.0, 4.0, 5.0]
+    duration_days: [1, 3]
+    affected_dimensions:
+      - region
+      - product
+    directions:
+      - positive
+      - negative
+
+  level_shift:
+    enabled: true
+    magnitudes: [0.05, 0.10, 0.15, 0.20, 0.25, 0.30]
+    start_dates:
+      - 2023-04-01
+      - 2023-07-01
+      - 2024-01-01
+    affected_dimensions:
+      - region
+      - product
+
+  trend_break:
+    enabled: true
+    break_dates:
+      - 2023-06-01
+      - 2024-03-01
+    new_slopes:
+      - 0.015
+      - 0.000
+      - -0.010
+      - -0.015
+    affected_dimensions:
+      - region
+      - product
+
+  dimension_local:
+    enabled: true
+    magnitudes: [0.20, 0.30, 0.40, 0.50]
+    affected_dimensions:
+      - region
+      - product
+    compensation:
+      enabled: true
+      other_dims_increase: 0.05
+
+global_settings:
+  min_affected_rows: 1
+  max_affected_rows: 50
+  ensure_detectable: true
+  seed_increment: 1000
+  output_scenario_files: true

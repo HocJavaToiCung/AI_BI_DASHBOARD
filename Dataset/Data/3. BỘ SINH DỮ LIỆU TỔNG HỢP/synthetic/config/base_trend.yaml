@@ -1,0 +1,139 @@
+project: AI Business Intelligence Dashboard
+output_dir: output
+seed: 42
+
+time:
+  start: 2023-01-01
+  end: 2024-12-31
+  freq: D
+
+dimensions:
+  regions:
+    - North
+    - Central
+    - South
+    - Highlands
+    - Mekong
+    - Urban
+  products:
+    - Software Dev
+    - Cloud Services
+    - Consulting
+    - Maintenance
+    - Training
+    - Hardware
+    - Support
+    - Integration
+    - Analytics
+    - Security
+  channels:
+    - Online
+    - Agency
+    - Direct
+    - Contract
+    - Partner
+
+base_values:
+  revenue_base: 50000
+  cost_ratio: 0.65
+  margin_target: 0.25
+
+trend:
+  type: piecewise_linear
+  slopes:
+    - start: 2023-01-01
+      end: 2023-06-30
+      slope: 0.008
+    - start: 2023-07-01
+      end: 2023-12-31
+      slope: 0.012
+    - start: 2024-01-01
+      end: 2024-06-30
+      slope: 0.006
+    - start: 2024-07-01
+      end: 2024-12-31
+      slope: 0.010
+
+season:
+  amplitude: 0.15
+  periods:
+    - name: yearly
+      period: 365
+      amplitude: 0.12
+    - name: quarterly
+      period: 91
+      amplitude: 0.08
+    - name: monthly
+      period: 30
+      amplitude: 0.05
+  holidays:
+    - date: 2023-01-20
+      effect: 0.20
+      direction: positive
+    - date: 2023-04-29
+      effect: 0.15
+      direction: positive
+    - date: 2023-09-02
+      effect: 0.15
+      direction: positive
+    - date: 2024-01-20
+      effect: 0.20
+      direction: positive
+    - date: 2024-04-29
+      effect: 0.15
+      direction: positive
+    - date: 2024-09-02
+      effect: 0.15
+      direction: positive
+
+noise:
+  distribution: normal
+  mean: 0
+  std: 0.08
+
+factors:
+  region:
+    North: 1.20
+    Central: 0.85
+    South: 1.10
+    Highlands: 0.70
+    Mekong: 0.75
+    Urban: 1.35
+  product:
+    Software Dev: 1.30
+    Cloud Services: 1.25
+    Consulting: 1.15
+    Maintenance: 0.90
+    Training: 0.75
+    Hardware: 1.05
+    Support: 0.80
+    Integration: 1.10
+    Analytics: 1.20
+    Security: 1.15
+  channel:
+    Online: 1.25
+    Agency: 1.10
+    Direct: 1.00
+    Contract: 1.20
+    Partner: 0.95
+
+transactions_per_day:
+  min: 80
+  max: 200
+
+output:
+  format: csv
+  compression: null
+  columns:
+    - transaction_id
+    - date
+    - region
+    - product
+    - channel
+    - transaction_type
+    - amount
+    - cost
+    - margin
+    - customer_id
+    - vendor_id
+    - description
