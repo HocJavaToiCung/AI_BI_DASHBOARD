@@ -601,42 +601,39 @@ synthetic/
 
 ### 7.1. Dataset
 
-- SEC financial time series (quarterly, 2020–2026)
+- SEC financial time series
 - Synthetic normal time series
-- Monash reference datasets (Hospital, M4 Quarterly, Tourism Quarterly)
+- Monash reference datasets
 
 ### 7.2. Forecasting unit
 
-Xác định rõ mức độ dự báo:
-- **Entity-level**: theo công ty/entity
-- **Metric-level**: theo chỉ số tài chính
-- **Aggregated**: theo ngành/khu vực
+Phải xác định rõ dự báo theo:
+- company/entity
+- financial metric
+- hoặc aggregated series
 
 ### 7.3. Temporal split
 
-- **Chronological split**: train → validation → test theo thứ tự thời gian
-- **Rolling-origin evaluation**: mở rộng cửa sổ train theo thời gian
-- **Không random shuffle** dữ liệu thời gian
+Sử dụng chronological split / rolling-origin evaluation. Không random shuffle.
 
 ### 7.4. Metrics
 
-- **MAE** — độ lỗi trung bình
-- **RMSE** — phạt mạnh outlier
-- **MASE** hoặc **sMAPE** — so sánh cross-series
+Đề xuất:
+- MAE
+- RMSE
+- MASE hoặc sMAPE
 
 ### 7.5. Baselines
 
-Ít nhất:
-- Naive / Seasonal Naive
+Ít nhất xem xét:
+- Naive
+- Seasonal Naive nếu phù hợp
 - ARIMA/ETS
 - Model đề xuất
 
 ### 7.6. Foundation model contamination
 
-Nếu dùng TimesFM/Chronos:
-- Kiểm tra xem benchmark có nằm trong pretraining corpus không
-- Đánh dấu kết quả là **potentially contaminated** nếu không chắc chắn
-- Ưu tiên đánh giá trên dữ liệu SEC sau ngày cutoff của mô hình
+Nếu sử dụng TimesFM/Chronos hoặc các foundation model khác, phải ghi rõ vấn đề potential data contamination / training-data leakage và không coi kết quả là hoàn toàn công bằng nếu benchmark có khả năng xuất hiện trong pretraining corpus.
 
 ---
 
@@ -644,25 +641,19 @@ Nếu dùng TimesFM/Chronos:
 
 ### 8.1. NL2SQL
 
-- Không để cùng question/template/schema xuất hiện ở cả train và evaluation
-- Kiểm tra schema leakage giữa BookSQL train/val/test
+Không để cùng một question/template/schema xuất hiện giữa train và evaluation nếu pipeline tự xây dựng dữ liệu bổ sung.
 
 ### 8.2. Forecasting
 
-- **Không random shuffle** dữ liệu thời gian
-- Temporal split bắt buộc: train trước, test sau
-- Không dùng thông tin tương lai để dự báo quá khứ
+Không random shuffle temporal data.
 
 ### 8.3. Foundation models
 
-- TimesFM/Chronos có thể đã được pre-trained trên benchmark công khai
-- Kiểm tra training corpus trước khi đánh giá
-- Đánh dấu kết quả là **potentially contaminated** nếu không xác minh được
+TimesFM/Chronos và các foundation model khác có khả năng đã được pre-trained trên dữ liệu công khai. Nếu dataset benchmark có khả năng nằm trong training corpus, đánh dấu kết quả là potentially contaminated.
 
 ### 8.4. Synthetic
 
-- Không dùng anomaly-injected test data để train anomaly detector
-- Tách biệt hoàn toàn train (clean) và test (anomaly-injected)
+Không dùng anomaly-injected test data để train anomaly detector nếu mục tiêu là đánh giá khả năng phát hiện.
 
 ---
 
@@ -678,7 +669,7 @@ Nếu dùng TimesFM/Chronos:
 
 ---
 
-## 10. LƯU Ý KHI SỬ DỤNG
+## 7. LƯU Ý KHI SỬ DỤNG
 
 1. **BookSQL:** Câu hỏi bằng tiếng Anh. Nếu muốn khẳng định hệ thống chạy tiếng Việt, phải dịch một tập con và cho người bản ngữ rà lại.
 2. **SEC EDGAR:** Chỉ có báo cáo tổng hợp, không có sổ cái chi tiết. Không có chiều "khu vực", "sản phẩm", "khách hàng" → không drill-down sâu được.
