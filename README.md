@@ -16,7 +16,7 @@
 
 <hr />
 
-## 01. Hero / Project Identity
+## 01. Project Identity
 
 | Thuộc tính | Chi tiết |
 |------------|----------|
@@ -28,7 +28,7 @@
 
 ---
 
-## 02. One-Minute Overview
+## 02. Overview
 
 Hệ thống chuyển câu hỏi tiếng Việt thành phân tích tài chính có kiểm soát:
 
@@ -48,159 +48,27 @@ Khác với chatbot thông thường, **không giao quyền tính toán cho LLM*
 
 ---
 
-## 03. Demo
+## 03. Demo / Screenshot
 
-> **Ví dụ câu hỏi:**
+## 11. Cách chạy 
 
-- "Doanh thu quý II/2026 tăng bao nhiêu phần trăm so với cùng kỳ?"
-- "Khu vực nào đóng góp nhiều nhất vào mức giảm lợi nhuận?"
-- "Doanh thu giảm bất thường ở sản phẩm nào?"
+### Dữ liệu
 
-**Kết quả trả về:** bảng số liệu, biểu đồ, phân rã theo dimension, nguồn dữ liệu và phép tính.
+```bash
+# Giải nén SEC EDGAR
+7z x "Dataset/Data/2. DỮ LIỆU TÀI CHÍNH DOANH NGHIỆP/*.7z" -oDataset/Data/2. DỮ LIỆU TÀI CHÍNH DOANH NGHIỆP/
 
----
-
-## 04. Core Idea
-
-Thay vì cho LLM sinh SQL trực tiếp, hệ thống dùng kiến trúc 7 tầng:
-
-```text
-LLM Orchestrator → Validator → Semantic Layer → Query Compiler → Deterministic Engine → Verification → Response
+# Sinh dữ liệu tổng hợp
+python Dataset/Data/3. BỘ SINH DỮ LIỆU TỔNG HỢP/synthetic/run.py
 ```
-
-**Semantic Layer** định nghĩa rõ metric, alias, công thức, dimension để LLM chỉ được chọn, không được tự suy diễn.
-
-**Structured Request** là đầu ra chuẩn của LLM thay vì SQL:
-
-```json
-{
-  "intent": "comparison",
-  "metric": "gross_margin",
-  "period": { "type": "quarter", "value": "2026Q2" },
-  "comparison": "same_period_previous_year"
-}
-```
-
----
-
-## 05. Key Features
-
-| # | Tính năng | Mô tả |
-|---|-----------|-------|
-| 1 | **KPI Analysis** | Revenue, Gross Profit, Margin, EBITDA... |
-| 2 | **Period Comparison** | YoY, QoQ, MoM, same-period |
-| 3 | **Drill-down** | Company → Region → Product → Channel |
-| 4 | **Decomposition** | Phân rã biến động theo dimension |
-| 5 | **Anomaly Detection** | Phát hiện spike, level_shift, trend_break |
-| 6 | **Forecasting** | Dự báo chuỗi thời gian (Naive, ARIMA, TimesFM...) |
-| 7 | **Numeric Verification** | 100% claim có provenance hợp lệ |
-| 8 | **Vietnamese Benchmark** | 250 câu tiếng Việt có difficulty, ground truth |
-
----
 
 ## 06. Architecture
 
-```text
-┌──────────────────────────────────────────────┐
-│                    USER / UI                 │
-│  Chat · Dashboard · KPI · Charts · Alerts    │
-└───────────────────────┬──────────────────────┘
-                        ↓
-┌──────────────────────────────────────────────┐
-│                LLM ORCHESTRATOR              │
-│ Intent · Metric · Filter · Dimension         │
-└───────────────────────┬──────────────────────┘
-                        ↓
-┌──────────────────────────────────────────────┐
-│                 REQUEST VALIDATOR             │
-│ Schema · Metric · Permission · Time · Unit   │
-└───────────────────────┬──────────────────────┘
-                        ↓
-┌──────────────────────────────────────────────┐
-│                  SEMANTIC LAYER              │
-│ Metric · Formula · Unit · Alias · Dimension  │
-└───────────────────────┬──────────────────────┘
-                        ↓
-┌──────────────────────────────────────────────┐
-│                  QUERY COMPILER               │
-│ Structured Request → SQL / Computation       │
-└───────────────────────┬──────────────────────┘
-                        ↓
-┌──────────────────────────────────────────────┐
-│              DETERMINISTIC ENGINE             │
-│ KPI · Comparison · Drill-down · Decomposition│
-│ Chart Data · Forecast · Anomaly               │
-└───────────────────────┬──────────────────────┘
-                        ↓
-┌──────────────────────────────────────────────┐
-│                VERIFICATION LAYER             │
-│ Numeric · Calculation · Unit · Period         │
-│ Provenance · Logical Support                  │
-└───────────────────────┬──────────────────────┘
-                        ↓
-┌──────────────────────────────────────────────┐
-│                RESPONSE GENERATOR             │
-│ Table · Chart · Explanation · Sources         │
-└──────────────────────────────────────────────┘
-```
 
 ---
 
 ## 07. End-to-End Example
-
-**Câu hỏi:** *"Biên lợi nhuận gộp quý II/2026 thay đổi thế nào so với cùng kỳ?"*
-
-**Pipeline:**
-
-```text
-Vietnamese Question
-      ↓
-LLM → Structured Request (intent: comparison, metric: gross_margin, period: 2026Q2)
-      ↓
-Validator kiểm tra metric/period hợp lệ
-      ↓
-Semantic Layer trả công thức: gross_profit / net_revenue
-      ↓
-Query Compiler sinh SQL
-      ↓
-Deterministic Engine tính: (108 - 100) / 100 = 8%
-      ↓
-Verification kiểm tra unit, period, provenance
-      ↓
-Response: "Doanh thu tăng 8% so với cùng kỳ" + biểu đồ
-```
-
-**LLM không tự tính 8%. LLM chỉ diễn đạt kết quả.**
-
----
-
-## 08. Research & Evaluation
-
-### Research Questions
-
-| RQ | Câu hỏi | Đánh giá |
-|----|---------|----------|
-| RQ1 | Semantic Layer có cải thiện accuracy của NL BI không? | A vs B (Semantic Layer on/off) |
-| RQ2 | Deterministic + Provenance có giảm numerical hallucination không? | Numeric Correctness, Coverage, Abstention |
-| RQ3 | Foundation forecasting model tốt hơn statistical baseline trên chuỗi tài chính không? | MASE, MAE, Prediction Interval |
-
-### Ablation Study
-
-So sánh 4 cấu hình: Raw LLM / +Semantic Layer / +Few-shot / +Self-repair
-
-### User Study
-
-So sánh Traditional BI vs AI BI Dashboard (12–15 participants, paired measurements)
-
----
-
-## 09. Results
-
-### Success Criteria
-
-| Tiêu chí | Mục tiêu |
-|----------|----------|
-cần bổ sung...
+< 1 quy trình đầu - cuối tháo tác trên giao diện và hệ thông >
 
 ---
 
@@ -225,62 +93,11 @@ cần bổ sung...
 
 ---
 
-## 11. Quick Start
-
-### Yêu cầu
-
-- Python 3.9+
-- Node.js 18+
-- DuckDB / PostgreSQL
-
-### Cài đặt
-
-```bash
-# Backend
-pip install -r requirements.txt
-
-# Frontend
-cd frontend && npm install
-```
-
-### Chạy
-
-```bash
-# Backend
-uvicorn api.main:app --reload
-
-# Frontend
-npm run dev
-```
-
-### Dữ liệu
-
-```bash
-# Giải nén SEC EDGAR
-7z x "Dataset/Data/2. DỮ LIỆU TÀI CHÍNH DOANH NGHIỆP/*.7z" -oDataset/Data/2. DỮ LIỆU TÀI CHÍNH DOANH NGHIỆP/
-
-# Sinh dữ liệu tổng hợp
-python Dataset/Data/3. BỘ SINH DỮ LIỆU TỔNG HỢP/synthetic/run.py
-```
-
----
 
 ## 12. Project Status
 
 | Module | Trạng thái |
 |--------|-----------|
-| SEC Ingestion | ✅ Đã có 26 quý (2020–2026) |
-| Semantic Layer | ✅ Đã có metric definitions |
-| Structured Request | ✅ Đã có pipeline |
-| Deterministic Engine | ✅ Đã có KPI computation |
-| Numeric Verification | ✅ Đã có provenance tracking |
-| Benchmark 250 câu | ✅ Đã có cấu trúc |
-| Visualization | ✅ Đã có Vega-Lite |
-| Decomposition | ✅ Đã có contribution analysis |
-| Anomaly Detection | ⏳ Cần chạy TSB-AD tập con |
-| Forecasting | ⏳ Cần chạy Monash baseline |
-| User Study | ⏳ Chưa triển khai |
-| Statistical Evaluation | ⏳ Chưa triển khai |
 
 ---
 
@@ -329,7 +146,6 @@ AI_Business_Intelligence/
 | `docs/architecture.md` | Kiến trúc hệ thống |
 | `docs/methodology.md` | Phương pháp nghiên cứu |
 | `docs/evaluation.md` | Chi tiết đánh giá |
-| `Dataset/Rule_kilo.md` | Quy tắc vận hành KILO |
 
 ---
 
@@ -346,10 +162,3 @@ AI_Business_Intelligence/
 | TSB-AD | Apache 2.0 + per-dataset |
 | Synthetic Data | Tự quyết định |
 
-### Tuyên bố khoa học
-
-- **Không tuyên bố:** "Hệ thống luôn đúng."
-- **Tuyên bố đúng:** "Trên tập kiểm thử, các claim định lượng được kiểm chứng và truy vết về nguồn dữ liệu hoặc phép tính tương ứng."
-
-- **Không tuyên bố:** "AI tìm ra nguyên nhân."
-- **Tuyên bố đúng:** "Hệ thống phân rã mức đóng góp của các dimension vào biến động của chỉ số."
