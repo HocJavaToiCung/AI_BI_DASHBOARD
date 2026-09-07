@@ -5,12 +5,3 @@ Dataset/Data/1. TEXT-TO-SQL/BookSQL/accounting tables/Master_txn_table_1.csv
 *.duckdb
 *.duckdb.wal
 Data/
-
-# Dữ liệu thô đã clean (quá lớn để commit)
-Clean/
-
-# Python
-__pycache__/
-*.pyc
-.venv/
-venv/
