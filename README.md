@@ -50,20 +50,13 @@ Khác với chatbot thông thường, **không giao quyền tính toán cho LLM*
 
 ## 03. Demo / Screenshot
 
+---
+
 ## 04. Cách chạy 
 
-### Dữ liệu
-
-```bash
-# Giải nén SEC EDGAR
-7z x "Dataset/Data/2. DỮ LIỆU TÀI CHÍNH DOANH NGHIỆP/*.7z" -oDataset/Data/2. DỮ LIỆU TÀI CHÍNH DOANH NGHIỆP/
-
-# Sinh dữ liệu tổng hợp
-python Dataset/Data/3. BỘ SINH DỮ LIỆU TỔNG HỢP/synthetic/run.py
-```
+---
 
 ## 05. Architecture
-
 
 ---
 
@@ -93,7 +86,6 @@ python Dataset/Data/3. BỘ SINH DỮ LIỆU TỔNG HỢP/synthetic/run.py
 
 ---
 
-
 ## 08. Project Status
 
 | Module | Trạng thái |
@@ -102,8 +94,6 @@ python Dataset/Data/3. BỘ SINH DỮ LIỆU TỔNG HỢP/synthetic/run.py
 ---
 
 ## 09. Repository Structure
-
-```
 ai-bi-dashboard/
 ├── README.md                      ← tài liệu này
 ├── pyproject.toml
@@ -143,11 +133,8 @@ ai-bi-dashboard/
 │
 └── docs/
     └── error_taxonomy.md          # phân loại lỗi thủ công
+    
 ```
-
-```
-
----
 
 ## 10. Limitations
 
