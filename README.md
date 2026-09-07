@@ -104,21 +104,47 @@ python Dataset/Data/3. BỘ SINH DỮ LIỆU TỔNG HỢP/synthetic/run.py
 ## 09. Repository Structure
 
 ```
-AI_Business_Intelligence/
+ai-bi-dashboard/
+├── README.md                      ← tài liệu này
+├── pyproject.toml
+├── docker-compose.yml             # postgres + api + web
 │
+├── semantic/                      ★ ĐÓNG GÓP CỐT LÕI
+│   ├── metrics.yml                # định nghĩa chỉ số
+│   ├── entities.yml               # bảng, khóa, quan hệ
+│   └── glossary.yml               # từ đồng nghĩa Việt–Anh
 │
-├── Dataset/
-│   └── Data/                   
-│     └── 1. TEXT-TO-SQL/
-│     └── 2. DỮ LIỆU TÀI CHÍNH DOANH NGHIỆP
-│     └── 3. BỘ SINH DỮ LIỆU TỔNG HỢP
-│     └── 4. DỰ BÁO CHUỖI THỜI GIAN
-│     └── 5. PHÁT HIỆN BẤT THƯỜNG
-│   └── Clean
-│   └── Clean_Data
-│   └── EDA
-└── README.md
-└── .gitignore
+├── backend/
+│   ├── main.py                    # FastAPI
+│   ├── semantic_layer.py          # YAML → SQL (tất định)
+│   ├── nl2query.py                # AI → phiếu JSON (KHÔNG sinh SQL)
+│   ├── decompose.py               # phân rã đóng góp
+│   ├── anomaly.py                 # STL + z-score
+│   ├── forecast.py                # baseline + mô hình nền tảng
+│   ├── narrative.py               # sinh nhận định
+│   └── guards.py                  ★ BỘ CHẶN SỐ
+│
+├── frontend/                      # Next.js (cắt được nếu thiếu thời gian)
+│
+├── data/
+│   ├── raw/                       # SEC EDGAR, Online Retail II
+│   ├── synthetic/
+│   │   ├── generate.py            ★ BỘ SINH DỮ LIỆU
+│   │   └── labels.csv             ★ GROUND TRUTH cho F8
+│   └── warehouse.duckdb
+│
+├── eval/                          ★ PHẦN NGHIÊN CỨU
+│   ├── benchmark_fin.jsonl        # 250 câu — ĐÓNG BĂNG ở T6
+│   ├── run_nl2sql.py
+│   ├── run_forecast.py
+│   ├── run_narrative.py
+│   ├── ablations.py               # A / B / C / D
+│   └── results/
+│
+└── docs/
+    └── error_taxonomy.md          # phân loại lỗi thủ công
+```
+
 ```
 
 ---
