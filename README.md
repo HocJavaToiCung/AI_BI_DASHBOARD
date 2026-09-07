@@ -94,6 +94,8 @@ Khác với chatbot thông thường, **không giao quyền tính toán cho LLM*
 ---
 
 ## 09. Repository Structure
+
+```
 ai-bi-dashboard/
 ├── README.md                      ← tài liệu này
 ├── pyproject.toml
@@ -132,10 +134,10 @@ ai-bi-dashboard/
 │   └── results/
 │
 └── docs/
-    └── error_taxonomy.md          # phân loại lỗi thủ công
-    
+    └── error_taxonomy.md          # phân loại lỗi thủ công    
 ```
 
+---
 ## 10. Limitations
 
 1. **Không thay thế chuyên gia tài chính** — hệ thống chỉ hỗ trợ phân tích, không phải kết luận cuối cùng
