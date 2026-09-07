@@ -50,7 +50,7 @@ Khác với chatbot thông thường, **không giao quyền tính toán cho LLM*
 
 ## 03. Demo / Screenshot
 
-## 11. Cách chạy 
+## 04. Cách chạy 
 
 ### Dữ liệu
 
@@ -62,17 +62,17 @@ Khác với chatbot thông thường, **không giao quyền tính toán cho LLM*
 python Dataset/Data/3. BỘ SINH DỮ LIỆU TỔNG HỢP/synthetic/run.py
 ```
 
-## 06. Architecture
+## 05. Architecture
 
 
 ---
 
-## 07. End-to-End Example
+## 06. End-to-End Example
 < 1 quy trình đầu - cuối tháo tác trên giao diện và hệ thông >
 
 ---
 
-## 10. Data & Benchmark
+## 07. Data & Benchmark
 
 ### Datasets
 
@@ -94,14 +94,14 @@ python Dataset/Data/3. BỘ SINH DỮ LIỆU TỔNG HỢP/synthetic/run.py
 ---
 
 
-## 12. Project Status
+## 08. Project Status
 
 | Module | Trạng thái |
 |--------|-----------|
 
 ---
 
-## 13. Repository Structure
+## 09. Repository Structure
 
 ```
 AI_Business_Intelligence/
@@ -123,7 +123,7 @@ AI_Business_Intelligence/
 
 ---
 
-## 14. Limitations
+## 10. Limitations
 
 1. **Không thay thế chuyên gia tài chính** — hệ thống chỉ hỗ trợ phân tích, không phải kết luận cuối cùng
 2. **SEC EDGAR chỉ có báo cáo tổng hợp** — không có sổ cái chi tiết, không drill-down sâu vào từng giao dịch
@@ -136,7 +136,7 @@ AI_Business_Intelligence/
 
 ---
 
-## 15. Documentation
+## 11. Documentation
 
 | Tài liệu | Mô tả |
 |----------|-------|
@@ -149,7 +149,7 @@ AI_Business_Intelligence/
 
 ---
 
-## 16. Citation / License
+## 12. Citation / License
 
 ### License
 
